@@ -12,13 +12,25 @@ class User(db.Model):
     username = db.Column(db.String(200))
     password = db.Column(db.String(200))
     contact = db.relationship(
-        'Contact',
+        'Blogpost',
         backref='user',
-        lazy=True,
-        uselist=False)
+        lazy='dynamic')
     
     def __init__(self,username):
         self.username = username
     
     def __repr__(self):
         return '<User: ' + self.username +'>'
+
+class Blogpost(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    title = db.Column(db.String(300))
+    text = db.Column(db.Text())
+    publish_date = db.Column(db.DateTime())
+    userid = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+
+    def __init__(self, title):
+        self.title = title
+
+    def __repr__(self):
+        return "<Blogpost '{}'>".format(self.title)
